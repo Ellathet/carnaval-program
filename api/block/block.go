@@ -27,7 +27,7 @@ func GetBlock(c *gin.Context) {
 	id := c.Param("id")
 	var block models.Block
 
-	if err := utils.DB.First(&block, id).Error; err != nil {
+	if err := utils.DB.Where("id = ?", id).First(&block).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Block not found"})
 		return
 	}
@@ -40,7 +40,7 @@ func UpdateBlock(c *gin.Context) {
 	var block models.Block
 
 	// If repository exists, or services, can reuse this function, but...
-	if err := utils.DB.First(&block, id).Error; err != nil {
+	if err := utils.DB.Where("id = ?", id).First(&block).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Block not found"})
 		return
 	}
@@ -59,11 +59,11 @@ func DeleteBlock(c *gin.Context) {
 	id := c.Param("id")
 	var block models.Block
 
-	if err := utils.DB.First(&block, id).Error; err != nil {
+	if err := utils.DB.Where("id = ?", id).First(&block).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Block not found"})
 		return
 	}
 
-	utils.DB.Delete(&block)
+	utils.DB.Where("id = ?", id).Delete(&block)
 	c.JSON(http.StatusOK, gin.H{"message": "Block deleted successfully"})
 }
